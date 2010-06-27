@@ -30,3 +30,9 @@ stamp-h1
 *~
 tags
 *.sw?
+src/*.vapi
+src/*.h
+src/*.c
+test/*.c
+test/tests
+

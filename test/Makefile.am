@@ -25,4 +25,8 @@ tests.vala.stamp: $(tests_VALASOURCES)
 
 tests_LDADD = $(LIBGEOFORMATS_LIBS) $(top_srcdir)/src/libgeoformats.la
 
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(tests_VALASOURCES:.vala=.c)
+
 EXTRA_DIST = $(tests_VALASOURCES)

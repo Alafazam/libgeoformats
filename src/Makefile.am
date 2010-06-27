@@ -60,4 +60,11 @@ dist_gir_DATA = \
 	GeoFormats-1.0.gir \
 	$(NULL)
 
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(libgeoformats_la_VALASOURCES:.vala=.c) \
+	geoformats-1.0.vapi \
+	GeoFormats-1.0.gir \
+	geoformats.h
+
 EXTRA_DIST = $(libgeoformats_la_VALASOURCES) geoformats-1.0.vapi GeoFormats-1.0.gir geoservices.vala.stamp
