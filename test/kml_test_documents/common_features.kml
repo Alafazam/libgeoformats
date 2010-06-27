@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+	<Document>
+		<name>My Document</name>
+		<Snippet maxLines="4">
+			The snippet is a way of
+			providing an alternative
+			description that will be
+			shown in the List view.
+		</Snippet>
+		<description>Collection of places I &quot;like&quot;</description>
+		<address>Address of Document</address>
+		<styleUrl>#myStyle</styleUrl>
+		<TimeStamp>
+			<when>1997-07-16</when>
+		</TimeStamp>
+	</Document>
+	<Folder>
+		<name>My Folder</name>
+		<description>Collection of places I like</description>
+	</Folder>
+</kml>

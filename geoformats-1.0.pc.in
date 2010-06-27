@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+
+Name: libgeoformats
+Description: Provides support for parsing popular geo formats like KML and GPX.
+Version: @VERSION@
+Requires: glib-2.0 gobject-2.0 json-glib-1.0
+Libs: -L${libdir} -lgeoformats
+Cflags: -I${includedir}/geoformats-1.0

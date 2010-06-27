@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+	<Document>
+		<name>Japan</name>
+		<description>Placemarks from Japan</description>
+		<Placemark>
+			<name>Railway from Nagasaki</name>
+			<description>Nothing in particular</description>
+			<LineString>
+				<coordinates>
+					129.870071,32.753441,0
+					129.867661,32.757191,0
+					129.865173,32.760288,0
+					129.863724,32.763039,0
+					129.862854,32.767872,0
+					129.860977,32.779129,0
+					129.861237,32.785118,0
+				</coordinates>
+			</LineString>
+		</Placemark>
+	</Document>
+</kml>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+	<Folder>
+		<name>GeoCommons</name>
+		<open>1</open>
+		<Snippet></Snippet>
+		<description>Wikimedia Commons</description>
+		<NetworkLink>
+			<name>Photos</name>
+			<visibility>1</visibility>
+			<open>0</open>
+			<Link>
+				<href>http://toolserver.org/~para/GeoCommons/kml.php?f=photos</href>
+				<viewRefreshMode>onStop</viewRefreshMode>
+				<viewRefreshTime>0.5</viewRefreshTime>
+				<viewFormat>BBOX=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]&amp;VIEWSIZE=[horizPixels]x[vertPixels]</viewFormat>
+				<viewBoundScale>0.9</viewBoundScale>
+			</Link>
+		</NetworkLink>
+		<NetworkLink>
+			<name>Maps</name>
+			<visibility>0</visibility>
+			<open>0</open>
+			<Link>
+				<href>http://toolserver.org/~para/GeoCommons/kml.php?f=maps</href>
+				<viewRefreshMode>onStop</viewRefreshMode>
+				<viewRefreshTime>0.5</viewRefreshTime>
+				<viewFormat>BBOX=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]&amp;VIEWSIZE=[horizPixels]x[vertPixels]</viewFormat>
+				<viewBoundScale>0.9</viewBoundScale>
+			</Link>
+		</NetworkLink>
+		<NetworkLink>
+			<name>Info</name>
+			<Style>
+				<ListStyle>
+					<ItemIcon>
+						<state>fetching1</state>
+						<href>http://maps.google.com/mapfiles/kml/pal3/icon44.png</href>
+					</ItemIcon>
+				</ListStyle>
+			</Style>
+			<visibility>1</visibility>
+			<Link>
+				<href>http://toolserver.org/~para/GeoCommons/info.php</href>
+				<refreshMode>onInterval</refreshMode>
+				<refreshInterval>3600</refreshInterval>
+			</Link>
+		</NetworkLink>
+	</Folder>
+</kml>

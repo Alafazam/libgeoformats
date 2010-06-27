@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.topografix.com/GPX/1/0" 
+	xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+	<trk>
+		<trkseg>
+			<trkpt lat="46.547883" lon="15.619634">
+				<ele>288.5</ele>
+				<time>2010-06-22T15:17:39Z</time>
+				<fix>3d</fix>
+				<sat>4</sat>
+				<hdop>65.39</hdop>
+				<vdop>82.50</vdop>
+			</trkpt>
+			<trkpt lat="46.547854" lon="15.619659">
+				<ele>288.5</ele>
+				<time>2010-06-22T15:17:40Z</time>
+				<fix>3d</fix>
+				<sat>4</sat>
+				<hdop>80.00</hdop>
+				<vdop>81.50</vdop>
+			</trkpt>
+			<trkpt lat="46.547826" lon="15.619734">
+				<ele>284.5</ele>
+				<time>2010-06-22T15:17:41Z</time>
+				<fix>3d</fix>
+				<sat>4</sat>
+				<hdop>54.30</hdop>
+				<vdop>60.00</vdop>
+			</trkpt>
+			<trkpt lat="46.547826" lon="15.619721">
+				<ele>283.0</ele>
+				<time>2010-06-22T15:17:42Z</time>
+				<fix>3d</fix>
+				<sat>4</sat>
+				<hdop>119.08</hdop>
+				<vdop>99.50</vdop>
+			</trkpt>
+			<trkpt lat="46.547833" lon="15.619709">
+				<ele>284.0</ele>
+				<time>2010-06-22T15:17:43Z</time>
+				<fix>3d</fix>
+				<sat>4</sat>
+				<hdop>89.14</hdop>
+				<vdop>86.00</vdop>
+			</trkpt>
+			<trkpt lat="46.547843" lon="15.619707">
+				<ele>285.0</ele>
+				<time>2010-06-22T15:17:44Z</time>
+				<fix>3d</fix>
+				<sat>4</sat>
+				<hdop>103.12</hdop>
+				<vdop>90.50</vdop>
+			</trkpt>
+		</trkseg>
+	</trk>
+</gpx>

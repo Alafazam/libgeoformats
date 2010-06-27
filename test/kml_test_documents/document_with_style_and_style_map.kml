@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<Style id="myStyle">
+			<IconStyle>
+				<Icon>
+					<href>http://myserver.com/icon.jpg</href>
+				</Icon>
+			</IconStyle>
+		</Style>
+		<StyleMap id="myStyleMap">
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#myStyle</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<Style id="myInnerStyle">
+					<IconStyle>
+						<color>00FF0000</color>
+					</IconStyle>
+				</Style>
+			</Pair>
+		</StyleMap>
+		<name>My Places</name>
+		<description>Collection of places I like</description>
+		<Placemark>
+			<name>Osaka</name>
+			<description>Osaka eki</description>
+			<styleUrl>#myStyle</styleUrl>
+			<Point>
+				<coordinates>135.495071,34.704365,0</coordinates>
+			</Point>
+		</Placemark>
+	</Document>
+</kml>
