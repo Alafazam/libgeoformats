@@ -15,6 +15,7 @@ libgeoformats_la_VALASOURCES = \
 	gpx-parser.vala \
 	kml-parser-structure.vala \
 	kml-parser.vala \
+	xml-helper.vala \
 	$(NULL)
 
 libgeoformats_la_SOURCES = \

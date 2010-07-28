@@ -1,21 +1,20 @@
 namespace Kml {
 
 	public class Parser : Object {
-		public Root root { get; set; }
 
-		public void parse_file (string filename) {
+		public Root parse_file (string filename) {
 			Xml.Doc* xml = Xml.Parser.parse_file (filename);
 			Xml.Node* root_node = xml->get_root_element ();
-			root = parse_root (root_node);
+			return parse_root (root_node);
 		}
 
-		public void parse_data (string data) {
+		public Root parse_data (string data) {
 			Xml.Doc* xml = Xml.Parser.parse_memory (data, (int) data.length);
 			Xml.Node* root_node = xml->get_root_element ();
-			root = parse_root (root_node);
+			return parse_root (root_node);
 		}
 
-		public void parse_object (Xml.Node* node, Kml.Object object) {
+		void parse_object (Xml.Node* node, Kml.Object object) {
 			string? id = node->get_prop("id");
 			if (id != null) {
 				object.id = id;
@@ -26,7 +25,7 @@ namespace Kml {
 			}
 		}
 
-		public Root parse_root (Xml.Node* node) {
+		Root parse_root (Xml.Node* node) {
 			var root = new Root();
 
 			Xml.Node* sub_node = node->children;
@@ -55,7 +54,7 @@ namespace Kml {
 			return root;
 		}
 
-		public void parse_feature_elements (Xml.Node* node, Feature feature) {
+		void parse_feature_elements (Xml.Node* node, Feature feature) {
 			switch (node->name) {
 				case "name":
 					feature.name = node->get_content().strip();
@@ -93,7 +92,7 @@ namespace Kml {
 			}
 		}
 
-		public void parse_container_elements (Xml.Node* node, Container container) {
+		void parse_container_elements (Xml.Node* node, Container container) {
 			parse_feature_elements (node, container);
 			switch (node->name) {
 				case "Placemark":
@@ -115,7 +114,7 @@ namespace Kml {
 			}
 		}
 
-		public Document parse_document (Xml.Node* node) {
+		Document parse_document (Xml.Node* node) {
 			var document = new Document ();
 			parse_object (node, document);
 
@@ -127,7 +126,7 @@ namespace Kml {
 			return document;
 		}
 
-		public Folder parse_folder (Xml.Node* node) {
+		Folder parse_folder (Xml.Node* node) {
 			var folder = new Folder ();
 			parse_object (node, folder);
 
@@ -159,7 +158,7 @@ namespace Kml {
 			return network_link;
 		}
 
-		public void parse_abstract_link_elements (Xml.Node* node, AbstractLink abstract_link) {
+		void parse_abstract_link_elements (Xml.Node* node, AbstractLink abstract_link) {
 			switch (node->name) {
 				case "href":
 					abstract_link.href = node->get_content().strip();
@@ -185,7 +184,7 @@ namespace Kml {
 			}
 		}
 
-		public Link parse_link (Xml.Node* node) {
+		Link parse_link (Xml.Node* node) {
 			var link = new Link();
 			parse_object (node, link);
 
@@ -197,7 +196,7 @@ namespace Kml {
 			return link;
 		}
 
-		public Icon parse_icon (Xml.Node* node) {
+		Icon parse_icon (Xml.Node* node) {
 			var icon = new Icon();
 			parse_object (node, icon);
 
@@ -209,7 +208,7 @@ namespace Kml {
 			return icon;
 		}
 
-		public Placemark parse_placemark (Xml.Node* node) {
+		Placemark parse_placemark (Xml.Node* node) {
 			var placemark = new Placemark();
 			parse_object (node, placemark);
 
@@ -238,7 +237,7 @@ namespace Kml {
 			return placemark;
 		}
 
-		public MultiGeometry parse_multi_geometry (Xml.Node* node) {
+		MultiGeometry parse_multi_geometry (Xml.Node* node) {
 			var multi_geometry = new MultiGeometry();
 			parse_object (node, multi_geometry);
 
@@ -271,7 +270,7 @@ namespace Kml {
 			return multi_geometry;
 		}
 
-		public Point parse_point (Xml.Node* node) {
+		Point parse_point (Xml.Node* node) {
 			var point = new Point();
 			parse_object (node, point);
 
@@ -287,7 +286,7 @@ namespace Kml {
 			return point;
 		}
 
-		public LineString parse_line_string (Xml.Node* node) {
+		LineString parse_line_string (Xml.Node* node) {
 			var line_string = new LineString();
 			parse_object (node, line_string);
 
@@ -312,7 +311,7 @@ namespace Kml {
 			return line_string;
 		}
 
-		public LinearRing parse_linear_ring (Xml.Node* node) {
+		LinearRing parse_linear_ring (Xml.Node* node) {
 			var linear_ring = new LinearRing();
 			parse_object (node, linear_ring);
 
@@ -337,7 +336,7 @@ namespace Kml {
 			return linear_ring;
 		}
 
-		public Polygon parse_polygon (Xml.Node* node) {
+		Polygon parse_polygon (Xml.Node* node) {
 			var polygon = new Polygon();
 			parse_object (node, polygon);
 
@@ -366,7 +365,7 @@ namespace Kml {
 			return polygon;
 		}
 
-		public LinearRing? parse_boundary (Xml.Node* node) {
+		LinearRing? parse_boundary (Xml.Node* node) {
 			var sub_node = node->children;
 			while (sub_node != null) {
 				switch (sub_node->name) {
@@ -378,7 +377,7 @@ namespace Kml {
 			return null;
 		}
 
-		public Coordinates parse_coordinates (Xml.Node* node) {
+		Coordinates parse_coordinates (Xml.Node* node) {
 			var coordinates = new Coordinates();
 			var coordinates_string = node->get_content();
 			var reg = new Regex ("[\n\t ]+");
@@ -396,7 +395,7 @@ namespace Kml {
 			return coordinates;
 		}
 
-		public TimeSpan parse_time_span (Xml.Node* node) {
+		TimeSpan parse_time_span (Xml.Node* node) {
 			var time_span = new TimeSpan();
 			parse_object (node, time_span);
 
@@ -408,7 +407,7 @@ namespace Kml {
 			return time_span;
 		}
 
-		public TimeStamp parse_time_stamp (Xml.Node* node) {
+		TimeStamp parse_time_stamp (Xml.Node* node) {
 			var time_stamp = new TimeStamp();
 			parse_object (node, time_stamp);
 
@@ -420,7 +419,7 @@ namespace Kml {
 			return time_stamp;
 		}
 
-		public void parse_time_span_elements (Xml.Node* node, TimeSpan time_span) {
+		void parse_time_span_elements (Xml.Node* node, TimeSpan time_span) {
 			switch (node->name) {
 				case "begin":
 					time_span.begin = node->get_content().strip();
@@ -431,7 +430,7 @@ namespace Kml {
 			}
 		}
 
-		public void parse_time_stamp_elements (Xml.Node* node, TimeStamp time_stamp) {
+		void parse_time_stamp_elements (Xml.Node* node, TimeStamp time_stamp) {
 			switch (node->name) {
 				case "when":
 					time_stamp.when = node->get_content().strip();
@@ -439,7 +438,7 @@ namespace Kml {
 			}
 		}
 
-		public Snippet parse_snippet (Xml.Node* node) {
+		Snippet parse_snippet (Xml.Node* node) {
 			var snippet = new Snippet ();
 
 			var content = node->get_content ();
@@ -454,7 +453,7 @@ namespace Kml {
 			return snippet;
 		}
 
-		public StyleMap parse_style_map (Xml.Node* node) {
+		StyleMap parse_style_map (Xml.Node* node) {
 			var style_map = new StyleMap ();
 			parse_object (node, style_map);
 
@@ -466,7 +465,7 @@ namespace Kml {
 			return style_map;
 		}
 
-		public void parse_style_map_elements (Xml.Node* node, StyleMap style_map) {
+		void parse_style_map_elements (Xml.Node* node, StyleMap style_map) {
 			switch (node->name) {
 				case "Pair":
 					var pair  = parse_pair (node);
@@ -475,7 +474,7 @@ namespace Kml {
 			}
 		}
 
-		public Pair parse_pair (Xml.Node* node) {
+		Pair parse_pair (Xml.Node* node) {
 			var pair = new Pair();
 			parse_object (node, pair);
 
@@ -487,7 +486,7 @@ namespace Kml {
 			return pair;
 		}
 
-		public void parse_pair_elements (Xml.Node* node, Pair pair) {
+		void parse_pair_elements (Xml.Node* node, Pair pair) {
 			switch (node->name) {
 				case "key":
 					pair.key = node->get_content().strip();
@@ -501,7 +500,7 @@ namespace Kml {
 			}
 		}
 
-		public Style parse_style (Xml.Node* node) {
+		Style parse_style (Xml.Node* node) {
 			var style = new Style ();
 			parse_object (node, style);
 
@@ -513,7 +512,7 @@ namespace Kml {
 			return style;
 		}
 
-		public void parse_style_elements (Xml.Node* node, Style style) {
+		void parse_style_elements (Xml.Node* node, Style style) {
 			switch (node->name) {
 				case "IconStyle":
 					style.icon_style = parse_icon_style (node);
@@ -536,7 +535,7 @@ namespace Kml {
 			}
 		}
 
-		public void parse_color_style_elements (Xml.Node* node, ColorStyle color_style) {
+		void parse_color_style_elements (Xml.Node* node, ColorStyle color_style) {
 			switch (node->name) {
 				case "color":
 					color_style.color = node->get_content().strip();
@@ -547,7 +546,7 @@ namespace Kml {
 			}
 		}
 
-		public IconStyle parse_icon_style (Xml.Node* node) {
+		IconStyle parse_icon_style (Xml.Node* node) {
 			var icon_style = new IconStyle ();
 			parse_object (node, icon_style);
 
@@ -560,7 +559,7 @@ namespace Kml {
 			return icon_style;
 		}
 
-		public void parse_icon_style_elements (Xml.Node* node, IconStyle icon_style) {
+		void parse_icon_style_elements (Xml.Node* node, IconStyle icon_style) {
 			switch (node->name) {
 				case "scale":
 					icon_style.scale = node->get_content().to_double ();
@@ -574,7 +573,7 @@ namespace Kml {
 			}
 		}
 
-		public LabelStyle parse_label_style (Xml.Node* node) {
+		LabelStyle parse_label_style (Xml.Node* node) {
 			var label_style = new LabelStyle ();
 			parse_object (node, label_style);
 
@@ -587,7 +586,7 @@ namespace Kml {
 			return label_style;
 		}
 
-		public void parse_label_style_elements (Xml.Node* node, LabelStyle label_style) {
+		void parse_label_style_elements (Xml.Node* node, LabelStyle label_style) {
 			switch (node->name) {
 				case "scale":
 					label_style.scale = node->get_content().to_double ();
@@ -595,7 +594,7 @@ namespace Kml {
 			}
 		}
 
-		public LineStyle parse_line_style (Xml.Node* node) {
+		LineStyle parse_line_style (Xml.Node* node) {
 			var line_style = new LineStyle ();
 			parse_object (node, line_style);
 
@@ -608,7 +607,7 @@ namespace Kml {
 			return line_style;
 		}
 
-		public void parse_line_style_elements (Xml.Node* node, LineStyle line_style) {
+		void parse_line_style_elements (Xml.Node* node, LineStyle line_style) {
 			switch (node->name) {
 				case "width":
 					line_style.width = node->get_content().to_double ();
@@ -616,7 +615,7 @@ namespace Kml {
 			}
 		}
 
-		public PolyStyle parse_poly_style (Xml.Node* node) {
+		PolyStyle parse_poly_style (Xml.Node* node) {
 			var poly_style = new PolyStyle ();
 			parse_object (node, poly_style);
 
@@ -629,7 +628,7 @@ namespace Kml {
 			return poly_style;
 		}
 
-		public void parse_poly_style_elements (Xml.Node* node, PolyStyle poly_style) {
+		void parse_poly_style_elements (Xml.Node* node, PolyStyle poly_style) {
 			switch (node->name) {
 				case "fill":
 					poly_style.fill = node->get_content().to_bool ();
@@ -640,7 +639,7 @@ namespace Kml {
 			}
 		}
 
-		public BalloonStyle parse_balloon_style (Xml.Node* node) {
+		BalloonStyle parse_balloon_style (Xml.Node* node) {
 			var balloon_style = new BalloonStyle ();
 			parse_object (node, balloon_style);
 
@@ -651,7 +650,7 @@ namespace Kml {
 			return balloon_style;
 		}
 
-		public ListStyle parse_list_style (Xml.Node* node) {
+		ListStyle parse_list_style (Xml.Node* node) {
 			var list_style = new ListStyle ();
 			parse_object (node, list_style);
 

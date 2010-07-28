@@ -4,15 +4,15 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_description_text () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/feature_description.kml");
+		Root root = parser.parse_file ("kml_test_documents/feature_description.kml");
 
 		Document document;
 
-		document = parser.root.features.nth_data(0) as Document;
+		document = root.features.nth_data(0) as Document;
 		assert (document.name == "My Document 1");
 		assert (document.description == "Quoted \"simple\"");
 
-		document = parser.root.features.nth_data(1) as Document;
+		document = root.features.nth_data(1) as Document;
 		assert (document.name == "My Document 2");
 		assert (document.description == "<html>With C DATA</html>");
 
@@ -20,8 +20,9 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_common_feature () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/common_features.kml");
-		var document = parser.root.features.nth_data(0) as Document;
+		Root root = parser.parse_file ("kml_test_documents/common_features.kml");
+
+		var document = root.features.nth_data(0) as Document;
 		assert (document.name == "My Document");
 		assert (document.description == "Collection of places I \"like\"");
 		assert (document.address == "Address of Document");
@@ -35,8 +36,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_document () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/simple_document.kml");
-		var document = parser.root.features.nth_data(0) as Document;
+		Root root =  parser.parse_file ("kml_test_documents/simple_document.kml");
+		var document = root.features.nth_data(0) as Document;
 		assert (document.name == "My Places");
 		assert (document.description == "Collection of places I like");
 		assert (document.features.length () == 0);
@@ -44,8 +45,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_document_with_style () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/document_with_style.kml");
-		var document = parser.root.features.nth_data(0) as Document;
+		Root root = parser.parse_file ("kml_test_documents/document_with_style.kml");
+		var document = root.features.nth_data(0) as Document;
 		assert (document.style_selectors.length () == 1L);
 		var style = document.style_selectors.nth_data(0) as Style;
 		assert (style.id == "myStyle");
@@ -65,8 +66,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_document_with_style_and_style_map () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/document_with_style_and_style_map.kml");
-		var document = parser.root.features.nth_data(0) as Document;
+		Root root = parser.parse_file ("kml_test_documents/document_with_style_and_style_map.kml");
+		var document = root.features.nth_data(0) as Document;
 		assert (document.style_selectors.length () == 2L);
 		var style = document.style_selectors.nth_data(0)as Style;
 		assert (style.id == "myStyle");
@@ -87,8 +88,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_folder () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/nested_folders.kml");
-		var folder = parser.root.features.nth_data(0) as Folder;
+		Root root = parser.parse_file ("kml_test_documents/nested_folders.kml");
+		var folder = root.features.nth_data(0) as Folder;
 
 		assert (folder.name == "My Places");
 		assert (folder.description == "Collection of places I like");
@@ -104,8 +105,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_placemark_point () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/simple_placemark_point.kml");
-		var document = parser.root.features.nth_data(0) as Document;
+		Root root = parser.parse_file ("kml_test_documents/simple_placemark_point.kml");
+		var document = root.features.nth_data(0) as Document;
 		assert (document.name == "Japan");
 		assert (document.description == "Placemarks from Japan");
 
@@ -125,8 +126,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_placemark_linestring() {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/simple_placemark_linestring.kml");
-		var document = parser.root.features.nth_data(0) as Document;
+		Root root = parser.parse_file ("kml_test_documents/simple_placemark_linestring.kml");
+		var document = root.features.nth_data(0) as Document;
 		assert (document.name == "Japan");
 		assert (document.description == "Placemarks from Japan");
 
@@ -178,8 +179,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_network_link () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/simple_network_link.kml");
-		var newtwork_link = parser.root.features.nth_data(0) as NetworkLink;
+		Root root = parser.parse_file ("kml_test_documents/simple_network_link.kml");
+		var newtwork_link = root.features.nth_data(0) as NetworkLink;
 		assert (newtwork_link.name == "Some map");
 
 		var link = newtwork_link.link;
@@ -198,8 +199,8 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_polygon () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/simple_polygon.kml");
-		var placemark = parser.root.features.nth_data(0) as Placemark;
+		Root root = parser.parse_file ("kml_test_documents/simple_polygon.kml");
+		var placemark = root.features.nth_data(0) as Placemark;
 		assert (placemark.name == "hollow box");
 
 		var polygon = placemark.geometry as Polygon;
@@ -215,9 +216,9 @@ public class TestKmlParser : GLib.Object {
 
 	public static void test_parse_advanced_network_link () {
 		var parser = new Parser ();
-		parser.parse_file ("kml_test_documents/advanced_network_link_2.kml");
-		assert (parser.root.features.length () == 1);
-		var folder = parser.root.features.nth_data(0) as Folder;
+		Root root = parser.parse_file ("kml_test_documents/advanced_network_link_2.kml");
+		assert (root.features.length () == 1);
+		var folder = root.features.nth_data(0) as Folder;
 
 		assert (folder.features.length () == 3);
 

@@ -2,147 +2,134 @@
 namespace Gpx {
 
 	public class Parser : Object {
-		public Root root { get; set; }
-		
+
 		public Root? parse_file (string filename) {
-			Xml.Doc* xml = Xml.Parser.parse_file (filename);
-			if (xml != null) {
-				Xml.Node* root_node = xml->get_root_element ();
-				return parse_root (root_node);
+			var parser = new XmlParser ();
+			var element = parser.parse_file (filename);
+			if (element != null) {
+				return parse_root (element);
 			}
 			return null;
 		}
 
-		public void parse_data (string data) {
-			Xml.Doc* xml = Xml.Parser.parse_memory (data, (int) data.length);
-			if (xml != null) {
-				Xml.Node* root_node = xml->get_root_element ();
-				root = parse_root (root_node);
+		public Root? parse_data (string data) {
+			var parser = new XmlParser ();
+			var element = parser.parse_data (data);
+			if (element != null) {
+				return parse_root (element);
 			}
+			return null;
 		}
 
-		Root parse_root (Xml.Node* node) {
-			var root = new Root();
-			
-			Xml.Node* sub_node = node->children;
+		Root parse_root (XmlElement element) {
+			var root = new Root ();
 
-			while (sub_node != null) {
-				switch (sub_node->name) {
+			foreach (XmlElement sub_element in element) {
+				switch (sub_element.name) {
 					case "name":
-						root.name = sub_node->get_content();
+						root.name = sub_element.get_content ();
 						break;
-					case "desc": 
-						root.description = sub_node->get_content(); 
+					case "desc":
+						root.description = sub_element.get_content ();
 						break;
-					case "author": 
-						root.author = sub_node->get_content(); 
+					case "author":
+						root.author = sub_element.get_content ();
 						break;
-					case "time": 
-						root.time = sub_node->get_content(); 
+					case "time":
+						root.time = sub_element.get_content ();
 						break;
-					case "keywords": 
-						root.keywords = sub_node->get_content(); 
+					case "keywords":
+						root.keywords = sub_element.get_content ();
 						break;
-					case "bounds": 
-						root.bounds = sub_node->get_content(); 
+					case "bounds":
+						root.bounds = sub_element.get_content ();
 						break;
-					case "trk": 
-						var track = parse_track (sub_node); 
+					case "trk":
+						var track = parse_track (sub_element);
 						root.add_track (track);
 						break;
-					case "wpt": 
-						var waypoint = parse_waypoint (sub_node);
+					case "wpt":
+						var waypoint = parse_waypoint (sub_element);
 						root.add_waypoint (waypoint);
 						break;
-				} 
-				sub_node = sub_node->next;
+				}
 			}
 			return root;
 		}
-		
-		Track parse_track (Xml.Node* node) {
-			var sub_node = node->children;
-			var track = new Track();
-			while (sub_node != null) {
-				switch (sub_node->name) {
+
+		Track parse_track (XmlElement element) {
+			var track = new Track ();
+			foreach (XmlElement sub_element in element) {
+				switch (sub_element.name) {
 					case "name":
-						track.name = sub_node->get_content();
+						track.name = sub_element.get_content ();
 						break;
-					case "desc": 
-						track.description = sub_node->get_content(); 
+					case "desc":
+						track.description = sub_element.get_content ();
 						break;
-					case "cmt": 
-						track.comment = sub_node->get_content(); 
+					case "cmt":
+						track.comment = sub_element.get_content ();
 						break;
-					case "src": 
-						track.source = sub_node->get_content(); 
+					case "src":
+						track.source = sub_element.get_content ();
 						break;
-					case "number": 
-						track.number = sub_node->get_content().to_int64 (); 
+					case "number":
+						track.number = sub_element.get_int64_content ();
 						break;
-					case "trkseg": 
-						track.add_segment (parse_segment (sub_node));
-						break;
-					case "wpt": 
-						var waypoint = parse_waypoint (sub_node);
-						root.add_waypoint (waypoint);
+					case "trkseg":
+						track.add_segment (parse_segment (sub_element));
 						break;
 				}
-				sub_node = sub_node->next;
 			}
 			return track;
 		}
-		
-		TrackSegment parse_segment (Xml.Node* node) {
-			var sub_node = node->children;
-			var segment = new TrackSegment();
-			while (sub_node != null) {
-				switch (sub_node->name) {
+
+		TrackSegment parse_segment (XmlElement element) {
+			var segment = new TrackSegment ();
+			foreach (XmlElement sub_element in element) {
+				switch (sub_element.name) {
 					case "trkpt":
-						segment.add_point (parse_waypoint (sub_node));
+						segment.add_point (parse_waypoint (sub_element));
 						break;
 				}
-				sub_node = sub_node->next;
 			}
 			return segment;
 		}
-		
-		Waypoint parse_waypoint (Xml.Node* node) {
-			var waypoint = new Waypoint();
-			waypoint.latitude = node->get_prop("lat").to_double ();
-			waypoint.longitude = node->get_prop("lon").to_double ();
-			
-			var sub_node = node->children;
-			while (sub_node != null) {
-				switch (sub_node->name) {
+
+		Waypoint parse_waypoint (XmlElement element) {
+			var waypoint = new Waypoint ();
+			waypoint.latitude = element["lat"].to_double ();
+			waypoint.longitude = element["lon"].to_double ();
+
+			foreach (XmlElement sub_element in element) {
+				switch (sub_element.name) {
 				case "ele":
-					waypoint.elevation = sub_node->get_content ().to_int ();
+					waypoint.elevation = sub_element.get_int_content ();
 					break;
 				case "time":
-					waypoint.time = sub_node->get_content ();
+					waypoint.time = sub_element.get_content ();
 					break;
 				case "name":
-					waypoint.name = sub_node->get_content ();
+					waypoint.name = sub_element.get_content ();
 					break;
 				case "desc":
-					waypoint.description = sub_node->get_content ();
+					waypoint.description = sub_element.get_content ();
 					break;
 				case "src":
-					waypoint.source = sub_node->get_content ();
+					waypoint.source = sub_element.get_content ();
 					break;
 				case "link":
-					waypoint.link = sub_node->get_content ();
+					waypoint.link = sub_element.get_content ();
 					break;
 				case "type":
-					waypoint.waypoint_type = sub_node->get_content( );
+					waypoint.waypoint_type = sub_element.get_content ();
 					break;
 				case "sat":
-					waypoint.number_of_satellites = sub_node->get_content ().to_int ();
+					waypoint.number_of_satellites = sub_element.get_int_content ();
 					break;
 				}
-				sub_node = sub_node->next;
 			}
-			
+
 			return waypoint;
 		}
 	}
