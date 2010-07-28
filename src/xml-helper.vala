@@ -54,6 +54,10 @@ public class XmlElement {
 		return get_content ().to_double ();
 	}
 
+	public bool get_bool_content () {
+		return get_content ().to_bool ();
+	}
+
 	public int get_int_content () {
 		return get_content ().to_int ();
 	}
