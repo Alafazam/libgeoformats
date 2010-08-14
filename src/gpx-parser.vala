@@ -1,11 +1,10 @@
-
 namespace Gpx {
 
 	public class Parser : Object {
 
 		public Root? parse_file (string filename) {
-			var parser = new XmlParser ();
-			var element = parser.parse_file (filename);
+			var document = new XmlHelp.Document ();
+			var element = document.parse_file (filename);
 			if (element != null) {
 				return parse_root (element);
 			}
@@ -13,18 +12,18 @@ namespace Gpx {
 		}
 
 		public Root? parse_data (string data) {
-			var parser = new XmlParser ();
-			var element = parser.parse_data (data);
+			var document = new XmlHelp.Document ();
+			var element = document.parse_data (data);
 			if (element != null) {
 				return parse_root (element);
 			}
 			return null;
 		}
 
-		Root parse_root (XmlElement element) {
+		Root parse_root (XmlHelp.Element element) {
 			var root = new Root ();
 
-			foreach (XmlElement sub_element in element) {
+			foreach (var sub_element in element) {
 				switch (sub_element.name) {
 					case "name":
 						root.name = sub_element.get_content ();
@@ -57,9 +56,9 @@ namespace Gpx {
 			return root;
 		}
 
-		Track parse_track (XmlElement element) {
+		Track parse_track (XmlHelp.Element element) {
 			var track = new Track ();
-			foreach (XmlElement sub_element in element) {
+			foreach (var sub_element in element) {
 				switch (sub_element.name) {
 					case "name":
 						track.name = sub_element.get_content ();
@@ -84,9 +83,9 @@ namespace Gpx {
 			return track;
 		}
 
-		TrackSegment parse_segment (XmlElement element) {
+		TrackSegment parse_segment (XmlHelp.Element element) {
 			var segment = new TrackSegment ();
-			foreach (XmlElement sub_element in element) {
+			foreach (var sub_element in element) {
 				switch (sub_element.name) {
 					case "trkpt":
 						segment.add_point (parse_waypoint (sub_element));
@@ -96,12 +95,12 @@ namespace Gpx {
 			return segment;
 		}
 
-		Waypoint parse_waypoint (XmlElement element) {
+		Waypoint parse_waypoint (XmlHelp.Element element) {
 			var waypoint = new Waypoint ();
 			waypoint.latitude = element["lat"].to_double ();
 			waypoint.longitude = element["lon"].to_double ();
 
-			foreach (XmlElement sub_element in element) {
+			foreach (var sub_element in element) {
 				switch (sub_element.name) {
 				case "ele":
 					waypoint.elevation = sub_element.get_int_content ();

@@ -3,18 +3,18 @@ namespace Kml {
 	public class Parser : Object {
 
 		public Root parse_file (string filename) {
-			var parser = new XmlParser();
-			var element = parser.parse_file (filename);
+			var document = new XmlHelp.Document();
+			var element = document.parse_file (filename);
 			return parse_root (element);
 		}
 
 		public Root parse_data (string data) {
-			var parser = new XmlParser();
-			var element = parser.parse_data (data);
+			var document = new XmlHelp.Document();
+			var element = document.parse_data (data);
 			return parse_root (element);
 		}
 
-		void parse_object (XmlElement element, Kml.Object object) {
+		void parse_object (XmlHelp.Element element, Kml.Object object) {
 			string? id = element["id"];
 			if (id != null) {
 				object.id = id;
@@ -25,46 +25,46 @@ namespace Kml {
 			}
 		}
 
-		Root parse_root (XmlElement element) {
+		Root parse_root (XmlHelp.Element element) {
 			var root = new Root();
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_root_element (sub_element, root);
 			}
 			return root;
 		}
 
-		Document parse_document (XmlElement element) {
+		Document parse_document (XmlHelp.Element element) {
 			var document = new Document ();
 			parse_object (element, document);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_container_elements (sub_element, document);
 			}
 			return document;
 		}
 
-		Folder parse_folder (XmlElement element) {
+		Folder parse_folder (XmlHelp.Element element) {
 			var folder = new Folder ();
 			parse_object (element, folder);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_container_elements (sub_element, folder);
 			}
 			return folder;
 		}
 
-		NetworkLink parse_network_link (XmlElement element) {
+		NetworkLink parse_network_link (XmlHelp.Element element) {
 			var network_link = new NetworkLink();
 			parse_object (element, network_link);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_feature_elements (sub_element, network_link);
 				parse_network_link_elements (sub_element, network_link);
 			}
 			return network_link;
 		}
 
-		void parse_root_element (XmlElement element, Root root) {
+		void parse_root_element (XmlHelp.Element element, Root root) {
 			switch (element.name) {
 				case "Document":
 					var document = parse_document (element);
@@ -85,7 +85,7 @@ namespace Kml {
 			}
 		}
 
-		void parse_feature_elements (XmlElement element, Feature feature) {
+		void parse_feature_elements (XmlHelp.Element element, Feature feature) {
 			switch (element.name) {
 				case "name":
 					feature.name = element.get_content().strip();
@@ -123,7 +123,7 @@ namespace Kml {
 			}
 		}
 
-		void parse_container_elements (XmlElement element, Container container) {
+		void parse_container_elements (XmlHelp.Element element, Container container) {
 			parse_feature_elements (element, container);
 			switch (element.name) {
 				case "Placemark":
@@ -145,7 +145,7 @@ namespace Kml {
 			}
 		}
 
-		void parse_network_link_elements (XmlElement element, NetworkLink network_link) {
+		void parse_network_link_elements (XmlHelp.Element element, NetworkLink network_link) {
 			switch (element.name) {
 				case "Link":
 					network_link.link = parse_link (element);
@@ -156,7 +156,7 @@ namespace Kml {
 			}
 		}
 
-		void parse_abstract_link_elements (XmlElement element, AbstractLink abstract_link) {
+		void parse_abstract_link_elements (XmlHelp.Element element, AbstractLink abstract_link) {
 			switch (element.name) {
 				case "href":
 					abstract_link.href = element.get_content ().strip ();
@@ -182,27 +182,27 @@ namespace Kml {
 			}
 		}
 
-		Link parse_link (XmlElement element) {
+		Link parse_link (XmlHelp.Element element) {
 			var link = new Link();
 			parse_object (element, link);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_abstract_link_elements (sub_element, link);
 			}
 			return link;
 		}
 
-		Icon parse_icon (XmlElement element) {
+		Icon parse_icon (XmlHelp.Element element) {
 			var icon = new Icon();
 			parse_object (element, icon);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_abstract_link_elements (sub_element, icon);
 			}
 			return icon;
 		}
 
-		void parse_placemark_elements (XmlElement element, Placemark placemark) {
+		void parse_placemark_elements (XmlHelp.Element element, Placemark placemark) {
 			switch (element.name) {
 				case "Point":
 					placemark.geometry = parse_point (element);
@@ -222,18 +222,18 @@ namespace Kml {
 			}
 		}
 
-		Placemark parse_placemark (XmlElement element) {
+		Placemark parse_placemark (XmlHelp.Element element) {
 			var placemark = new Placemark();
 			parse_object (element, placemark);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_feature_elements (sub_element, placemark);
 				parse_placemark_elements (sub_element, placemark);
 			}
 			return placemark;
 		}
 
-		void parse_multi_geometry_elements (XmlElement element, MultiGeometry multi_geometry) {
+		void parse_multi_geometry_elements (XmlHelp.Element element, MultiGeometry multi_geometry) {
 			switch (element.name) {
 				case "Point":
 					var geometry = parse_point (element);
@@ -258,21 +258,21 @@ namespace Kml {
 			}
 		}
 
-		MultiGeometry parse_multi_geometry (XmlElement element) {
+		MultiGeometry parse_multi_geometry (XmlHelp.Element element) {
 			var multi_geometry = new MultiGeometry();
 			parse_object (element, multi_geometry);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_multi_geometry_elements (sub_element, multi_geometry);
 			}
 			return multi_geometry;
 		}
 
-		Point parse_point (XmlElement element) {
+		Point parse_point (XmlHelp.Element element) {
 			var point = new Point();
 			parse_object (element, point);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				switch (sub_element.name) {
 					case "coordinates":
 						point.coordinates = parse_coordinates (sub_element);
@@ -282,7 +282,7 @@ namespace Kml {
 			return point;
 		}
 
-		void parse_line_string_elements (XmlElement element, LineString line_string) {
+		void parse_line_string_elements (XmlHelp.Element element, LineString line_string) {
 			switch (element.name) {
 				case "extrude":
 					line_string.extrude = element.get_content () == "1";
@@ -299,17 +299,17 @@ namespace Kml {
 			}
 		}
 
-		LineString parse_line_string (XmlElement element) {
+		LineString parse_line_string (XmlHelp.Element element) {
 			var line_string = new LineString();
 			parse_object (element, line_string);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_line_string_elements (sub_element, line_string);
 			}
 			return line_string;
 		}
 
-		void parse_linear_ring_elements (XmlElement element, LinearRing linear_ring) {
+		void parse_linear_ring_elements (XmlHelp.Element element, LinearRing linear_ring) {
 			switch (element.name) {
 				case "extrude":
 					linear_ring.extrude = element.get_content () == "1";
@@ -326,17 +326,17 @@ namespace Kml {
 			}
 		}
 
-		LinearRing parse_linear_ring (XmlElement element) {
+		LinearRing parse_linear_ring (XmlHelp.Element element) {
 			var linear_ring = new LinearRing();
 			parse_object (element, linear_ring);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_linear_ring_elements (sub_element, linear_ring);
 			}
 			return linear_ring;
 		}
 
-		void parse_polygon_elements (XmlElement element, Polygon polygon) {
+		void parse_polygon_elements (XmlHelp.Element element, Polygon polygon) {
 			switch (element.name) {
 				case "extrude":
 					polygon.extrude = element.get_content () == "1";
@@ -357,18 +357,18 @@ namespace Kml {
 			}
 		}
 
-		Polygon parse_polygon (XmlElement element) {
+		Polygon parse_polygon (XmlHelp.Element element) {
 			var polygon = new Polygon();
 			parse_object (element, polygon);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_polygon_elements (sub_element, polygon);
 			}
 			return polygon;
 		}
 
-		LinearRing? parse_boundary (XmlElement element) {
-			foreach (XmlElement sub_element in element) {
+		LinearRing? parse_boundary (XmlHelp.Element element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				switch (sub_element.name) {
 					case "LinearRing":
 						return parse_linear_ring (sub_element);
@@ -377,7 +377,7 @@ namespace Kml {
 			return null;
 		}
 
-		Coordinates parse_coordinates (XmlElement element) {
+		Coordinates parse_coordinates (XmlHelp.Element element) {
 			var coordinates = new Coordinates();
 			var coordinates_string = element.get_content ();
 			var reg = new Regex ("[\n\t ]+");
@@ -395,27 +395,27 @@ namespace Kml {
 			return coordinates;
 		}
 
-		TimeSpan parse_time_span (XmlElement element) {
+		TimeSpan parse_time_span (XmlHelp.Element element) {
 			var time_span = new TimeSpan();
 			parse_object (element, time_span);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_time_span_elements (sub_element, time_span);
 			}
 			return time_span;
 		}
 
-		TimeStamp parse_time_stamp (XmlElement element) {
+		TimeStamp parse_time_stamp (XmlHelp.Element element) {
 			var time_stamp = new TimeStamp();
 			parse_object (element, time_stamp);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_time_stamp_elements (sub_element, time_stamp);
 			}
 			return time_stamp;
 		}
 
-		void parse_time_span_elements (XmlElement element, TimeSpan time_span) {
+		void parse_time_span_elements (XmlHelp.Element element, TimeSpan time_span) {
 			switch (element.name) {
 				case "begin":
 					time_span.begin = element.get_content ().strip ();
@@ -426,7 +426,7 @@ namespace Kml {
 			}
 		}
 
-		void parse_time_stamp_elements (XmlElement element, TimeStamp time_stamp) {
+		void parse_time_stamp_elements (XmlHelp.Element element, TimeStamp time_stamp) {
 			switch (element.name) {
 				case "when":
 					time_stamp.when = element.get_content ().strip ();
@@ -434,7 +434,7 @@ namespace Kml {
 			}
 		}
 
-		Snippet parse_snippet (XmlElement element) {
+		Snippet parse_snippet (XmlHelp.Element element) {
 			var snippet = new Snippet ();
 
 			var content = element.get_content ();
@@ -449,17 +449,17 @@ namespace Kml {
 			return snippet;
 		}
 
-		StyleMap parse_style_map (XmlElement element) {
+		StyleMap parse_style_map (XmlHelp.Element element) {
 			var style_map = new StyleMap ();
 			parse_object (element, style_map);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_style_map_elements (sub_element, style_map);
 			}
 			return style_map;
 		}
 
-		void parse_style_map_elements (XmlElement element, StyleMap style_map) {
+		void parse_style_map_elements (XmlHelp.Element element, StyleMap style_map) {
 			switch (element.name) {
 				case "Pair":
 					var pair = parse_pair (element);
@@ -468,17 +468,17 @@ namespace Kml {
 			}
 		}
 
-		Pair parse_pair (XmlElement element) {
+		Pair parse_pair (XmlHelp.Element element) {
 			var pair = new Pair();
 			parse_object (element, pair);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_pair_elements (sub_element, pair);
 			}
 			return pair;
 		}
 
-		void parse_pair_elements (XmlElement element, Pair pair) {
+		void parse_pair_elements (XmlHelp.Element element, Pair pair) {
 			switch (element.name) {
 				case "key":
 					pair.key = element.get_content ().strip ();
@@ -492,17 +492,17 @@ namespace Kml {
 			}
 		}
 
-		Style parse_style (XmlElement element) {
+		Style parse_style (XmlHelp.Element element) {
 			var style = new Style ();
 			parse_object (element, style);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_style_elements (sub_element, style);
 			}
 			return style;
 		}
 
-		void parse_style_elements (XmlElement element, Style style) {
+		void parse_style_elements (XmlHelp.Element element, Style style) {
 			switch (element.name) {
 				case "IconStyle":
 					style.icon_style = parse_icon_style (element);
@@ -525,7 +525,7 @@ namespace Kml {
 			}
 		}
 
-		void parse_color_style_elements (XmlElement element, ColorStyle color_style) {
+		void parse_color_style_elements (XmlHelp.Element element, ColorStyle color_style) {
 			switch (element.name) {
 				case "color":
 					color_style.color = element.get_content ().strip ();
@@ -536,18 +536,18 @@ namespace Kml {
 			}
 		}
 
-		IconStyle parse_icon_style (XmlElement element) {
+		IconStyle parse_icon_style (XmlHelp.Element element) {
 			var icon_style = new IconStyle ();
 			parse_object (element, icon_style);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_color_style_elements (sub_element, icon_style);
 				parse_icon_style_elements (sub_element, icon_style);
 			}
 			return icon_style;
 		}
 
-		void parse_icon_style_elements (XmlElement element, IconStyle icon_style) {
+		void parse_icon_style_elements (XmlHelp.Element element, IconStyle icon_style) {
 			switch (element.name) {
 				case "scale":
 					icon_style.scale = element.get_double_content ();
@@ -561,18 +561,18 @@ namespace Kml {
 			}
 		}
 
-		LabelStyle parse_label_style (XmlElement element) {
+		LabelStyle parse_label_style (XmlHelp.Element element) {
 			var label_style = new LabelStyle ();
 			parse_object (element, label_style);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_color_style_elements (sub_element, label_style);
 				parse_label_style_elements (sub_element, label_style);
 			}
 			return label_style;
 		}
 
-		void parse_label_style_elements (XmlElement element, LabelStyle label_style) {
+		void parse_label_style_elements (XmlHelp.Element element, LabelStyle label_style) {
 			switch (element.name) {
 				case "scale":
 					label_style.scale = element.get_double_content ();
@@ -580,18 +580,18 @@ namespace Kml {
 			}
 		}
 
-		LineStyle parse_line_style (XmlElement element) {
+		LineStyle parse_line_style (XmlHelp.Element element) {
 			var line_style = new LineStyle ();
 			parse_object (element, line_style);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_color_style_elements (sub_element, line_style);
 				parse_line_style_elements (sub_element, line_style);
 			}
 			return line_style;
 		}
 
-		void parse_line_style_elements (XmlElement element, LineStyle line_style) {
+		void parse_line_style_elements (XmlHelp.Element element, LineStyle line_style) {
 			switch (element.name) {
 				case "width":
 					line_style.width = element.get_double_content ();
@@ -599,18 +599,18 @@ namespace Kml {
 			}
 		}
 
-		PolyStyle parse_poly_style (XmlElement element) {
+		PolyStyle parse_poly_style (XmlHelp.Element element) {
 			var poly_style = new PolyStyle ();
 			parse_object (element, poly_style);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 				parse_color_style_elements (sub_element, poly_style);
 				parse_poly_style_elements (sub_element, poly_style);
 			}
 			return poly_style;
 		}
 
-		void parse_poly_style_elements (XmlElement element, PolyStyle poly_style) {
+		void parse_poly_style_elements (XmlHelp.Element element, PolyStyle poly_style) {
 			switch (element.name) {
 				case "fill":
 					poly_style.fill = element.get_bool_content ();
@@ -621,21 +621,21 @@ namespace Kml {
 			}
 		}
 
-		BalloonStyle parse_balloon_style (XmlElement element) {
+		BalloonStyle parse_balloon_style (XmlHelp.Element element) {
 			var balloon_style = new BalloonStyle ();
 			parse_object (element, balloon_style);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 			}
 
 			return balloon_style;
 		}
 
-		ListStyle parse_list_style (XmlElement element) {
+		ListStyle parse_list_style (XmlHelp.Element element) {
 			var list_style = new ListStyle ();
 			parse_object (element, list_style);
 
-			foreach (XmlElement sub_element in element) {
+			foreach (XmlHelp.Element sub_element in element) {
 			}
 
 			return list_style;
